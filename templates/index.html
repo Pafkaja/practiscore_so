@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Practiscore ranking creator by PaFka</title>
+</head>
+<body>
+
+<p>wklej w okienko poniżej URL'e do wyników zawodów z practiscore, np:
+<br/><br/>
+https://practiscore.com/results/new/c303d286-2339-43b4-91de-b6ac297126cb<br/>
+https://practiscore.com/results/new/1241a02d-dc52-435a-9b33-c0775fd736dd<br/>
+https://practiscore.com/results/new/ca3f17ab-b4b0-4dcf-828f-5af689e93ad0<br/>
+https://practiscore.com/results/new/221b2645-cb99-477a-b45e-4fd2a20ee98b
+</p>
+
+
+  <form method="post" action="/practiscore">
+    <textarea  name="urls" cols="100" rows="5">{{data.form_urls}}</textarea>
+    <input type="submit" name="action" value="Generuj html" />
+  {% if data %}
+    <input type="submit" name="action" value="Generuj csv" />
+  {% endif %}
+  </form>
+
+  {% if data %}
+  <h2>Ranking dla zawodów:</h2>
+  <ul>
+    {% for zaw in data.matches %}
+    <li>{{zaw.data}} : {{zaw.nazwa}}</li>
+    {% endfor %}
+  </ul>
+
+{% for div, divvals in data.results.items() %}
+  <h3>{{div}}</h3>
+  <table>
+    <thead>
+    <tr><th>Nazwisko</th><th>Imie</th><th>punkty poszczególnych edycji</th><th>SUMA</th></tr>
+    </thead>
+    <tbody>
+      {% for shooter in divvals %}
+      <tr><td>{{shooter.nazwisko}}</td><td>{{shooter.imie}}</td><td>{{shooter.list_match_scores()}}</td><td>{{shooter.sum_match_scores()}}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endfor %}
+{% endif %}
+</body>
+</html>

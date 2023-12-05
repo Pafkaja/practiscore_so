@@ -14,7 +14,7 @@ def get_match_scores(fname):
             return json.load(match_scores_file)
 
 if __name__=="__main__":
-    fname = "Pomorze_Open_2023_HG_PCC_L3_Export.psc"
+    fname = "Pomorze_Open_2023_HG_Export.psc"
 
     match_data = get_match_data(fname)
 
