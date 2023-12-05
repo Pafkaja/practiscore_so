@@ -3,13 +3,17 @@ import practiscore_site
 
 class Shooter:
 
-    def __init__(self, ps_data):
+    def __init__(self, ps_data, ilewynikow=None):
         self.imie = ps_data['sh_fn']
         self.nazwisko = ps_data['sh_ln']
         self.klasa = ps_data['sh_dvp']
         self.ps_uuids = [ps_data['sh_uuid'],]
         self.ps_data = ps_data
         self.match_scores = {}
+        try:
+            self.ilewynikow = int(ilewynikow)
+        except:
+            self.ilewynikow = None
 
     def add_uuid(self, uuid):
         if uuid not in self.ps_uuids:
@@ -20,8 +24,14 @@ class Shooter:
             raise Exception("Zawodnik ma już score w tym maczu")
         self.match_scores[match_id] = float(perc)
 
+    def get_match_scores(self):
+        if self.ilewynikow:
+            return sorted(self.match_scores.values(), reverse=True)[:self.ilewynikow]
+        else:
+            return self.match_scores.values()
+
     def sum_match_scores_float(self):
-        return sum(self.match_scores.values())
+        return sum(self.get_match_scores())
 
     def sum_match_scores(self):
         return f"{self.sum_match_scores_float():.2f}"
@@ -47,7 +57,7 @@ def find_shooter_in_db_by_uuid(uuid, shooters_db):
             return shooter
     return None
 
-def get_ranking_from_uuids(matches_uuid):
+def get_ranking_from_uuids(matches_uuid, ilewynikow=None):
     shooters_db = []
     matches = []
     for match_uuid in matches_uuid:
@@ -61,7 +71,7 @@ def get_ranking_from_uuids(matches_uuid):
             if sh is not None:
                 sh.add_uuid(shooter['sh_uuid'])
             else:
-                sh = Shooter(shooter)
+                sh = Shooter(shooter, ilewynikow=ilewynikow)
                 shooters_db.append(sh)
 
         print("załadowano zawodników")

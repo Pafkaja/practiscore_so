@@ -21,6 +21,7 @@ def index():
     if request.method == "POST":
         match_uuids = []
         form_urls = request.form.get("urls")
+        ilewynikow = request.form.get("ilewynikow")
         for fu in form_urls.split():
             url_parsed = urlparse(fu)
             if url_parsed.scheme and url_parsed.netloc:
@@ -28,8 +29,8 @@ def index():
                 if len(muuid)>0:
                     match_uuids.append(muuid[0])
         if len(match_uuids)>1:
-            matches, results = practiscore_ranking.get_ranking_from_uuids(match_uuids)
-            render_data = {'matches':matches, 'results':results, 'form_urls':form_urls}
+            matches, results = practiscore_ranking.get_ranking_from_uuids(match_uuids, ilewynikow)
+            render_data = {'matches':matches, 'results':results, 'form_urls':form_urls, 'ilewynikow':ilewynikow}
             if request.form.get("action")=="Generuj csv":
                 si = io.StringIO()
                 cw = csv.writer(si)
@@ -41,9 +42,9 @@ def index():
                 for div in results.keys():
                     cw.writerow([])
                     cw.writerow([div,])
-                    cw.writerow(['Nazwisko','Imie','punkty poszczegolnych edycji','SUMA' ])
-                    for shooter in results[div]:
-                        cw.writerow([shooter.nazwisko, shooter.imie, shooter.list_match_scores(), shooter.sum_match_scores()])
+                    cw.writerow(['Miejsce','Nazwisko','Imie','punkty poszczegolnych edycji','SUMA' ])
+                    for idx,shooter in enumerate(results[div]):
+                        cw.writerow([idx+1,shooter.nazwisko, shooter.imie, shooter.list_match_scores(), shooter.sum_match_scores()])
                 output = make_response(si.getvalue())
                 output.headers["Content-Disposition"] = "attachment; filename=export.csv"
                 output.headers["Content-type"] = "text/csv"

@@ -17,6 +17,7 @@ https://practiscore.com/results/new/221b2645-cb99-477a-b45e-4fd2a20ee98b
 
   <form method="post" action="/practiscore">
     <textarea  name="urls" cols="100" rows="5">{{data.form_urls}}</textarea>
+    <br/>Ile najlepszych wyników zaliczać do rankingu? <input type="number" name="ilewynikow" value="{{data.ilewynikow}}"/>
     <input type="submit" name="action" value="Generuj html" />
   {% if data %}
     <input type="submit" name="action" value="Generuj csv" />
@@ -35,11 +36,11 @@ https://practiscore.com/results/new/221b2645-cb99-477a-b45e-4fd2a20ee98b
   <h3>{{div}}</h3>
   <table>
     <thead>
-    <tr><th>Nazwisko</th><th>Imie</th><th>punkty poszczególnych edycji</th><th>SUMA</th></tr>
+    <tr><th>Miejsce</th><th>Nazwisko</th><th>Imie</th><th>punkty poszczególnych edycji</th><th>SUMA</th></tr>
     </thead>
     <tbody>
       {% for shooter in divvals %}
-      <tr><td>{{shooter.nazwisko}}</td><td>{{shooter.imie}}</td><td>{{shooter.list_match_scores()}}</td><td>{{shooter.sum_match_scores()}}</td></tr>
+      <tr><td>{{loop.index}}</td><td>{{shooter.nazwisko}}</td><td>{{shooter.imie}}</td><td>{{shooter.list_match_scores()}}</td><td>{{shooter.sum_match_scores()}}</td></tr>
       {% endfor %}
     </tbody>
   </table>
