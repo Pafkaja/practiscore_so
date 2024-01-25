@@ -5,6 +5,11 @@
   <title>Practiscore ranking creator by PaFka</title>
 </head>
 <body>
+<h1>Practiscore ranking creator by PaFka</h1>
+<p>Strona służy do generowania rankingu cyklu zawodów. W okienko poniżej wklejasz linki do wyników zawodów z practiscore - jeden url/wynik, jedna linijka.
+  Określ także w okienku niżej, ile nalepszych wyników zawodnika powinno być zaliczane. Strona automatycznie pobierze wyniki z serwisu Practiscore
+ i obliczy ranking. Po policzeniu rankinu, będziesz miał możliwość pobrania wyliczeń w formie CSV. Oczywiście by porównanie działało prawidłowo, zawodnik
+powinien być wpisany tym samym imieniem i nazwiskiem (Maciek to nie to samo co Maciej ;) )</p>
 
 <p>wklej w okienko poniżej URL'e do wyników zawodów z practiscore, np:
 <br/><br/>
@@ -17,7 +22,7 @@ https://practiscore.com/results/new/221b2645-cb99-477a-b45e-4fd2a20ee98b
 
   <form method="post" action="/practiscore">
     <textarea  name="urls" cols="100" rows="5">{{data.form_urls}}</textarea>
-    <br/>Ile najlepszych wyników zaliczać do rankingu? <input type="number" name="ilewynikow" value="{{data.ilewynikow}}"/>
+    <br/>Ile najlepszych wyników zawodnika zaliczać do rankingu? <input type="number" name="ilewynikow" value="{{data.ilewynikow}}"/>
     <input type="submit" name="action" value="Generuj html" />
   {% if data %}
     <input type="submit" name="action" value="Generuj csv" />
@@ -31,6 +36,13 @@ https://practiscore.com/results/new/221b2645-cb99-477a-b45e-4fd2a20ee98b
     <li>{{zaw.data}} : {{zaw.nazwa}}</li>
     {% endfor %}
   </ul>
+<p>Ile najlepszych wyników zawodnika zaliczono do rankingu:
+  {% if data.ilewynikow %}
+  {{data.ilewynikow}}
+  {% else %}
+  wszystkie
+  {% endif %}
+</p>
 
 {% for div, divvals in data.results.items() %}
   <h3>{{div}}</h3>
